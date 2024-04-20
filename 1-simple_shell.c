@@ -11,9 +11,7 @@
  */
 int main(int argc, char **argv __attribute__ ((unused)))
 {
-	char *prompt = "#cisfun$ ";
-	char *error_txt = "./shell: No such file or directory\n";
-	char *getline_buff, buffer[BUFFER_SIZE], **env, *arg[2];
+	char *prompt = "#cisfun$ ", *getline_buff, buffer[BUFFER_SIZE], **env, *arg[2];
 	pid_t my_pid;
 	size_t getline_len;
 	int count, status;
@@ -39,19 +37,16 @@ int main(int argc, char **argv __attribute__ ((unused)))
 		{
 			if (getline_buff[count] == ' ')
 			{
-				count = 0;
-				while (error_txt[count] != '\0')
-				{
-					_putchar(error_txt[count]);
-					count++;
-				}
-				fflush(stdout);
+				perror("./shell: No such file or directory\n");
+				count = -1;
 				break;
 			}
 			buffer[count] = getline_buff[count];
 
 			count++;
 		}
+		if (count == -1)
+			continue;
 		buffer[count] = '\0';
 		arg[0] = buffer;
 		arg[1] = NULL;
@@ -59,18 +54,14 @@ int main(int argc, char **argv __attribute__ ((unused)))
 		if (my_pid == -1)
 		{
 			perror("Error: Failed to fork.\n");
+			free(getline_buff);
 			return (-1);
 		}
 		if (my_pid == 0)
 		{
 			execve(buffer, arg, env);
-			count = 0;
-			while (error_txt[count] != '\0')
-			{
-				_putchar(error_txt[count]);
-				count++;
-			}
-			fflush(stdout);
+			perror("./shell: No such file or directory\n");
+			free(getline_buff);
 			return (-1);
 		}
 
@@ -87,5 +78,6 @@ int main(int argc, char **argv __attribute__ ((unused)))
 		}
 	}
 
+	free(getline_buff);
 	return (0);
 }
