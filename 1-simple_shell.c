@@ -13,11 +13,12 @@ int main(int argc, char **argv __attribute__ ((unused)))
 {
 	char *prompt = "#cisfun$ ";
 	char *error_txt = "./shell: No such file or directory\n";
-	char *getline_buff, buffer[BUFFER_SIZE], *env[] = { NULL }, *arg[2];
+	char *getline_buff, buffer[BUFFER_SIZE], **env, *arg[2];
 	pid_t my_pid;
 	size_t getline_len;
 	int count, status;
 
+	env = environ;
 	getline_buff = NULL;
 	getline_len = count = 0;
 	if (argc != 1)

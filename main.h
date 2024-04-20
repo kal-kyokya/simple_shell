@@ -10,6 +10,8 @@
 #include <string.h>
 #include <stddef.h>
 
+extern char **environ;
+
 int _putchar(char c);
 
 #endif
