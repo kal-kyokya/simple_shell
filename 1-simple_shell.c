@@ -32,7 +32,7 @@ int main(int argc, char **argv __attribute__ ((unused)))
 		{
 			if (getline_buff[count] == ' ')
 			{
-				fprintf(stdout, "./shell: No such file or directory\n");
+				fprintf(stdout, "No space character allowed, one was detected.\n");
 				fprintf(stdout, "#cisfun$ ");
 				count = -1;
 				break;
