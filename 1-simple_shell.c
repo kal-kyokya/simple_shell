@@ -11,7 +11,7 @@
  */
 int main(int argc, char **argv __attribute__ ((unused)))
 {
-	char *prompt = "#cisfun$ ", *getline_buff, buffer[BUFFER_SIZE], **env, *arg[2];
+	char *getline_buff, buffer[BUFFER_SIZE], **env, *arg[2];
 	pid_t my_pid;
 	size_t getline_len;
 	int count, status;
@@ -24,12 +24,7 @@ int main(int argc, char **argv __attribute__ ((unused)))
 		perror("Usage: ./shell\n");
 		return (-1);
 	}
-	while (prompt[count] != '\0')
-	{
-		_putchar(prompt[count]);
-		count++;
-	}
-	fflush(stdout);
+	fprintf(stdout, "#cisfun$ ");
 	while (getline(&getline_buff, &getline_len, stdin) != -1)
 	{
 		count = 0;
@@ -37,7 +32,8 @@ int main(int argc, char **argv __attribute__ ((unused)))
 		{
 			if (getline_buff[count] == ' ')
 			{
-				perror("./shell: No such file or directory\n");
+				fprintf(stdout, "./shell: No such file or directory\n");
+				fprintf(stdout, "#cisfun$ ");
 				count = -1;
 				break;
 			}
@@ -45,11 +41,11 @@ int main(int argc, char **argv __attribute__ ((unused)))
 
 			count++;
 		}
-		if (count == -1)
-			continue;
 		buffer[count] = '\0';
 		arg[0] = buffer;
 		arg[1] = NULL;
+		if (count == -1)
+			continue;
 		my_pid = fork();
 		if (my_pid == -1)
 		{
@@ -60,21 +56,15 @@ int main(int argc, char **argv __attribute__ ((unused)))
 		if (my_pid == 0)
 		{
 			execve(buffer, arg, env);
-			perror("./shell: No such file or directory\n");
-			free(getline_buff);
-			return (-1);
+			fprintf(stdout, "./shell: No such file or directory\n");
+			return (1);
 		}
 
 		if (my_pid != 0)
 		{
 			waitpid(my_pid, &status, 0);
-			count = 0;
-			while (prompt[count] != '\0')
-			{
-				_putchar(prompt[count]);
-				count++;
-			}
-			fflush(stdout);
+			getline_buff = NULL;
+			fprintf(stdout, "#cisfun$ ");
 		}
 	}
 
