@@ -2,55 +2,42 @@
 
 #define BUFFER_SIZE 64
 
+char **tokenize(char *buffer);
+
 /**
  * main - Entry point to the function.
- * @argc: Number of cmd line inputs.
- * @argv: String list of all cmd line inputs.
  *
  * Return: 0 if program runs successfully.
  */
-int main(int argc, char **argv __attribute__ ((unused)))
+int main(void)
 {
-	char *getline_buff, buffer[BUFFER_SIZE], **env, *arg[2];
+	char *getline_buff = NULL, buffer[BUFFER_SIZE], **env = environ, **arg;
 	pid_t my_pid;
-	size_t getline_len;
-	int count, status, counter;
+	size_t getline_len = 0;
+	int count = 0, status, counter = 0;
 
-	env = environ;
-	getline_buff = NULL;
-	getline_len = count = counter = 0;
-	if (argc != 1)
-	{
-		perror("Usage: ./shell\n");
-		return (-1);
-	}
 	fprintf(stdout, "#cisfun$ ");
 	while (getline(&getline_buff, &getline_len, stdin) != -1)
 	{
 		count = counter = 0;
 		while (getline_buff[count] != '\n')
 		{
-			if (getline_buff[count] == ' ')
+			if (getline_buff[count] == ' ' && counter == 0)
 			{
 				count++;
 				continue;
 			}
 			buffer[counter] = getline_buff[count];
-
 			count++;
 			counter++;
 		}
-		buffer[count] = '\0';
-		arg[0] = buffer;
-		arg[1] = NULL;
-		if (count == -1)
-			continue;
+		buffer[counter] = '\0';
+		arg = tokenize(buffer);
 		my_pid = fork();
 		if (my_pid == -1)
 		{
 			perror("Error: Failed to fork.\n");
-			free(getline_buff);
-			return (-1);
+			break;
 		}
 		if (my_pid == 0)
 		{
@@ -58,15 +45,51 @@ int main(int argc, char **argv __attribute__ ((unused)))
 			fprintf(stdout, "./shell: No such file or directory\n");
 			return (1);
 		}
-
-		if (my_pid != 0)
-		{
-			waitpid(my_pid, &status, 0);
-			getline_buff = NULL;
-			fprintf(stdout, "#cisfun$ ");
-		}
+		waitpid(my_pid, &status, 0);
+		fprintf(stdout, "#cisfun$ ");
 	}
-
 	free(getline_buff);
 	return (0);
+}
+
+/**
+ * tokenize - Initializes the argument list.
+ * @buffer: Array containing cmd line input.
+ *
+ * Return: A pointer to the new argument list.
+ */
+char **tokenize(char *buffer)
+{
+	char *token, **arg;
+	int count, elements;
+
+	count = 0;
+	elements = 3;
+	if (buffer == NULL || buffer[0] == '\0')
+	{
+		arg = malloc(sizeof(char *) * 2);
+		arg[0] = "";
+		arg[1] = NULL;
+	}
+	else
+	{
+		token = strtok(buffer, " ");
+		if (token != NULL)
+		{
+			arg = malloc(sizeof(char *) * 2);
+			while (token != NULL)
+			{
+				arg[count] = token;
+				token = strtok(NULL, " ");
+				if (token != NULL)
+					arg = realloc(arg, elements++);
+				count++;
+			}
+			arg[count] = NULL;
+		}
+		else
+			return (NULL);
+	}
+
+	return (arg);
 }

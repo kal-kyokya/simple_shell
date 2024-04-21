@@ -29,7 +29,7 @@ int main(void)
 			count++;
 			counter++;
 		}
-		buffer[count] = '\0';
+		buffer[counter] = '\0';
 		arg[0] = buffer;
 		arg[1] = NULL;
 		my_pid = fork();
