@@ -10,10 +10,12 @@
 int main(void)
 {
 	ssize_t read;
-	char *input = NULL, **argv = NULL;
+	char *input;
 	size_t len;
 	pid_t pid;
+	char **argv = NULL;
 
+	input = NULL;
 	len = 0;
 	while (TRUE)
 	{
