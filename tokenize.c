@@ -5,6 +5,7 @@
 /**
  * tokenize - Turns each word of a string input into an char array[] element.
  * @input: String to be processed.
+ * @delimiter: String denoting limit between words.
  *
  * Return: A double pointer to the tokenized version of input.
  */

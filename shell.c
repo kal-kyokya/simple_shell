@@ -10,10 +10,9 @@
 int main(void)
 {
 	ssize_t read;
-	char *input;
+	char *input, **argv = NULL;
 	size_t len;
 	pid_t pid;
-	char **argv = NULL;
 
 	input = NULL;
 	len = 0;
@@ -25,8 +24,8 @@ int main(void)
 			continue;
 		if (read > 1)
 		{
-       			input[read - 1] = '\0';
-       			argv = tokenize(input, " ");
+			input[read - 1] = '\0';
+			argv = tokenize(input, " ");
 			is_exit(argv, input);
 			is_env(argv);
 			argv[0] = get_path(argv);

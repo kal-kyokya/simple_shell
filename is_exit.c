@@ -1,7 +1,7 @@
 #include "shell.h"
 
 /**
- * is_exit - Checks if input string is "exit". 
+ * is_exit - Checks if input string is "exit".
  * @argv: List of cmd line arguments.
  * @input: String input from stdin.
  *
@@ -20,7 +20,7 @@ void is_exit(char **argv, char *input)
 		{
 			free(input);
 			free(argv);
-			exit (0);
+			exit(0);
 		}
 		count++;
 	}
