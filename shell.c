@@ -23,8 +23,8 @@ int main(void)
 			continue;
 		if (read > 1)
 		{
-			input[read - 1] = '\0';
-			argv = tokenize(input);
+       			input[read - 1] = '\0';
+       			argv = tokenize(input, " ");
 			is_exit(argv, input);
 			is_env(argv);
 			argv[0] = get_path(argv);

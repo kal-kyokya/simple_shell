@@ -14,7 +14,7 @@ void display_prompt(void);
 extern char **environ;
 ssize_t get_line(char **input, size_t *len, FILE *file);
 void is_env(char **argv);
-char **tokenize(char *input);
+char **tokenize(char *input, const char *delimiter);
 void exec_ve(char **argv);
 void is_exit(char **argv, char *input);
 char *get_path(char **argv);
