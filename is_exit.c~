@@ -1,0 +1,13 @@
+#include "shell.h"
+
+/**
+ * is_exit - Checks if input string is "exit". 
+ * @argv: List of cmd line arguments.
+ * @input: String input from stdin.
+ *
+ * Return: Nothing.
+ */
+void is_exit(char **argv, char *input)
+{
+
+}
