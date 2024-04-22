@@ -21,7 +21,7 @@ char **tokenize(char *input, const char *delimiter)
 	if (argv == NULL)
 		return (NULL);
 	token = strtok(input, delimiter);
-	if (token == NUll)
+	if (token == NULL)
 		return (NULL);
 	while (token != NULL)
 	{

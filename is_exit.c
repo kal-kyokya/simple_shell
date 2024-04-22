@@ -11,7 +11,7 @@ void is_exit(char **argv, char *input)
 {
 	int count;
 
-	if (argv == NULL || argv[0] == NULL || *arg[0] == '\0')
+	if (argv == NULL || argv[0] == NULL || *argv[0] == '\0')
 		return;
 	count = 0;
 	while (argv[count] != NULL)
