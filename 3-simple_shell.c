@@ -35,7 +35,6 @@ int main(void)
 			counter++;
 		}
 		buffer[counter] = '\0';
-		arg = tokenize(buffer, " ");
 		if (buffer[0] != '/' && buffer[0] != '.')
 		{
 			path = tokenize(getenv("PATH"), ":");
@@ -52,7 +51,12 @@ int main(void)
 					arg = tokenize(buffer, " ");
 					my_pid = fork();
 					if (forking(my_pid, arg, env, &status) == 0)
+					{
+						free(arg);
+						free(getline_buff);
+						fprintf(stdout, "#cisfun$ ");
 						break;
+					}
 				}
 				else
 				{
@@ -60,13 +64,26 @@ int main(void)
 					break;
 				}
 				count++;
+				if (path[count] == NULL)
+				{
+					fprintf(stdout, "./shell: No such file or directory\n");
+					free(arg);
+					free(getline_buff);
+					fprintf(stdout, "#cisfun$ ");
+				}
 			}
 			continue;
 		}
-		my_pid = fork();
-		forking(my_pid, arg, env, &status);
+		else
+		{
+			arg = tokenize(buffer, " ");
+			my_pid = fork();
+			forking(my_pid, arg, env, &status);
+			free(arg);
+			free(getline_buff);
+			fprintf(stdout, "#cisfun$ ");
+		}
 	}
-	free(getline_buff);
 	return (0);
 }
 
@@ -129,7 +146,6 @@ int forking(pid_t my_pid, char **arg, char **env, int *status)
 {
 	int value;
 
-	printf("%s\n", arg[0]);
 	value = 0;
 	if (my_pid == -1)
 	{
@@ -139,12 +155,10 @@ int forking(pid_t my_pid, char **arg, char **env, int *status)
 	else if (my_pid == 0)
 	{
 		execve(arg[0], arg, env);
-		fprintf(stdout, "./shell: No such file or directory\n");
 		value = -1;
 	}
 	else
 		waitpid(my_pid, status, 0);
-	fprintf(stdout, "#cisfun$ ");
 
 	return (value);
 }
