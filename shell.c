@@ -12,7 +12,7 @@ int main(void)
 	ssize_t read;
 	char *input, **argv = NULL;
 	size_t len;
-	pid_t pid;
+	pid_t my_pid;
 
 	input = NULL;
 	len = 0;
@@ -34,10 +34,10 @@ int main(void)
 				perror("Error: ");
 				continue;
 			}
-			pid = fork();
-			if (pid == -1)
+			my_pid = fork();
+			if (my_pid == -1)
 				exit(-1);
-			else if (pid == 0)
+			else if (my_pid == 0)
 				exec_ve(argv);
 			else
 				wait(NULL);
