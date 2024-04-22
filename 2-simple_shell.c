@@ -1,6 +1,6 @@
 #include "main.h"
 
-#define BUFFER_SIZE 64
+#define BUFFER_SIZE 1024
 
 char **tokenize(char *buffer);
 
