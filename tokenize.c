@@ -1,4 +1,4 @@
-#include "shell.c"
+#include "shell.h"
 
 #define ARRAY_SIZE 16
 
@@ -20,13 +20,13 @@ char **tokenize(char *input, const char *delimiter)
 	argv = malloc(sizeof(char *) * max_size);
 	if (argv == NULL)
 		return (NULL);
-	token = strtok(input, delimiter);
+	token = str_tok(input, delimiter);
 	if (token == NULL)
 		return (NULL);
 	while (token != NULL)
 	{
 		argv[count] = token;
-		token = strtok(NULL, delimiter);
+		token = str_tok(NULL, delimiter);
 		count++;
 		if (count >= max_size - 1)
 		{
