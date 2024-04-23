@@ -1,50 +1,44 @@
 #include "shell.h"
 
-#define TRUE 1
-
 /**
- * main - Entry point to the program (i.e. A unix command line interpreter)
+ * main - unix command line interpreter
  *
- * Return: Nothing.
+ * Return: void.
  */
+
 int main(void)
 {
+	char *input = NULL;
+	size_t len = 0;
 	ssize_t read;
-	char *input, **argv = NULL;
-	size_t len;
-	pid_t my_pid;
+	char *argv[2];
+	pid_t pid;
 
-	input = NULL;
-	len = 0;
-	while (TRUE)
+	while (1)
 	{
-		display_prompt();
+		printf("($) ");
 		read = getline(&input, &len, stdin);
-		if (read > 1 && is_all_spaces(input, read))
-			continue;
-		if (read > 1)
+		if (read != -1)
 		{
 			input[read - 1] = '\0';
-			argv = tokenize(input, " ");
-			is_exit(argv, input);
-			is_env(argv);
-			argv[0] = get_path(argv);
-			if (argv[0] == NULL)
+			argv[0] = input;
+			argv[1] = NULL;
+			pid = fork();
+			if (pid == -1)
+				printf("error\n");
+
+			if (pid == 0)
 			{
-				perror("Error: ");
-				continue;
+				if ((execve(argv[0], argv, NULL) == -1))
+					printf("error\n");
 			}
-			my_pid = fork();
-			if (my_pid == -1)
-				exit(-1);
-			else if (my_pid == 0)
-				exec_ve(argv);
 			else
 				wait(NULL);
-			free(argv);
 		}
-		else if (read == -1 || read == 0)
-			break;
+
+		else
+			printf("error\n");
+
 	}
 	free(input);
 
