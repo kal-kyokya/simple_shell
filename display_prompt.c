@@ -8,5 +8,5 @@
 void display_prompt(void)
 {
 	if (isatty(STDIN_FILENO))
-		fprintf(stdout, "#cisfun$ ");
+		fprintf(stdout, "($) ");
 }
