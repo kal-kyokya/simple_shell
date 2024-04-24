@@ -8,39 +8,42 @@
 
 int main(void)
 {
-	char *input = NULL;
-	size_t len = 0;
 	ssize_t read;
-	char *argv[2];
+	char *input = NULL, **argv = NULL;
+	size_t len = 0;
 	pid_t pid;
 
 	while (1)
 	{
-		printf("($) ");
+		display_prompt();
 		read = getline(&input, &len, stdin);
-		if (read != -1)
+		if (read > 1 && is_all_spaces(input, read))
+			continue;
+		if (read > 1)
 		{
 			input[read - 1] = '\0';
-			argv[0] = input;
-			argv[1] = NULL;
+			argv = tokenize(input);
+			is_exit(argv, input);
+			is_env(argv);
+			argv[0] = get_path(argv);
+			if (argv[0] == NULL)
+			{
+				perror("Error: ");
+				continue;
+			}
 			pid = fork();
 			if (pid == -1)
-				printf("error\n");
-
-			if (pid == 0)
-			{
-				if ((execve(argv[0], argv, NULL) == -1))
-					printf("error\n");
-			}
+				exit(-1);
+			else if (pid == 0)
+				exec_ve(argv);
 			else
 				wait(NULL);
+			free(argv[0]);
+			free(argv);
 		}
-
-		else
-			printf("error\n");
-
+		else if (read == -1 || read == 0)
+			break;
 	}
 	free(input);
-
 	return (0);
 }

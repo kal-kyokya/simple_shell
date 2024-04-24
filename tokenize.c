@@ -1,42 +1,30 @@
 #include "shell.h"
 
-#define ARRAY_SIZE 16
-
 /**
- * tokenize - Turns each word of a string input into an char array[] element.
- * @input: String to be processed.
- * @delimiter: String denoting limit between words.
+ * tokenize - tokenizes the input
+ * @input: string read from stdin
  *
- * Return: A double pointer to the tokenized version of input.
+ * Return: array of argumrnts.
  */
-char **tokenize(char *input, const char *delimiter)
-{
-	char **argv = NULL;
-	char *token;
-	int count, max_size;
 
-	count = 0;
-	max_size = ARRAY_SIZE;
-	argv = malloc(sizeof(char *) * max_size);
+char **tokenize(char *input)
+{
+	const char delim[] = " ";
+	char *token;
+	int  i = 0;
+	char **argv = NULL;
+
+	argv = (char **)malloc(sizeof(char *) * (strlen(input) + 1));
 	if (argv == NULL)
 		return (NULL);
-	token = strtok(input, delimiter);
-	if (token == NULL)
-		return (NULL);
+	token = strtok(input, delim);
 	while (token != NULL)
 	{
-		argv[count] = token;
-		token = strtok(NULL, delimiter);
-		count++;
-		if (count >= max_size - 1)
-		{
-			max_size *= 2;
-			argv = realloc(argv, sizeof(char *) * max_size);
-			if (argv == NULL)
-				return (NULL);
-		}
+		argv[i] = token;
+		token = strtok(NULL, delim);
+		i++;
 	}
-	argv[count] = NULL;
+	argv[i] = NULL;
 
 	return (argv);
 }
